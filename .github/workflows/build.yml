@@ -77,15 +77,15 @@ jobs:
 #          path: v8
 #          compression-level: 9
 
-      - name: Apply V8 patch
-        shell: pwsh
-        run: |
-          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
-          cd v8
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git status
-          git am v8asm.patch
+#      - name: Apply V8 patch
+#        shell: pwsh
+#        run: |
+#          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
+#          cd v8
+#          git config --global user.email "you@example.com"
+#          git config --global user.name "Your Name"
+#          git status
+#          git am v8asm.patch
 
 
       - name: Build d8
@@ -117,21 +117,6 @@ jobs:
           
           treat_warnings_as_errors = false
           
-          extra_cflags = [
-            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
-          ]
-        
-          extra_cflags_cc = [
-            "-Wno-deprecated-declarations",
-          ]
-        
-          extra_cflags_host = [
-            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
-          ]
-        
-          extra_cflags_cc_host = [
-            "-Wno-deprecated-declarations",
-          ]
           "@
           gn gen $release
           ninja -C $release d8
