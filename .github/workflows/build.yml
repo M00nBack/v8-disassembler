@@ -41,9 +41,12 @@ jobs:
         shell: pwsh
         run: |
           fetch v8
+          dir v8
           cd v8
           git checkout $env:V8_BRANCH
+          dir
           gclient sync -v
+          dir
 
 
 #      - name: Upload V8 Source
@@ -60,9 +63,6 @@ jobs:
           dir v8
           Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
           cd v8
-          git init
-          git add src BUILD.gn
-          git commit -m init
           git am v8asm.patch
 
       - name: Build d8
