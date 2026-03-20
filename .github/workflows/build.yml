@@ -1,0 +1,110 @@
+name: Build V8 Disassembler
+
+on:
+  workflow_dispatch:
+    inputs:
+      v8_branch:
+        description: 'V8 Version / Branch / Tag'
+        required: true
+        default: '12.4.254.21'
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      V8_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.v8_branch || '12.4.254.21' }}
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      GYP_MSVS_VERSION: 2022
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install depot_tools
+        shell: pwsh
+        run: |
+         git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git C:\depot_tools
+         echo "C:\depot_tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Fetch V8 and checkout target version
+        shell: pwsh
+        run: |
+          fetch v8
+          cd v8
+          git checkout $env:V8_BRANCH
+          gclient sync -v
+
+
+#      - name: Upload V8 Source
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: v8-src-${{ env.V8_BRANCH }}
+#          path: v8
+#          compression-level: 9
+
+      - name: Apply V8 patch
+        shell: pwsh
+        run: |
+          dir
+          Copy-Item -Path "patch\v8asm.patch" -Destination "v8\v8asm.patch"
+          cd v8
+          git apply --check -v v8asm.patch
+          git apply --whitespace=fix v8asm.patch
+
+      - name: Build d8
+        id: build
+        shell: pwsh
+        run: |
+          cd v8
+          $release = "out.gn\x64.release"
+          New-Item -ItemType Directory -Path $release -Force
+          Set-Content -Path "$release\args.gn" -Value @"
+          dcheck_always_on = false
+          is_component_build = false
+          is_debug = false
+          target_cpu = "x64"
+          use_custom_libcxx = false
+          v8_monolithic = true
+          v8_use_external_startup_data = false
+          
+          v8_static_library = true
+          v8_enable_disassembler = true
+          v8_enable_object_print = true
+          v8_enable_sandbox = true
+          v8_enable_pointer_compression = true
+          v8_enable_pointer_compression_shared_cage = true
+          v8_enable_external_code_space = true
+          
+          treat_warnings_as_errors = false
+          "@
+          gn gen $release
+          ninja -C $release d8
+
+          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
+
+      - name: Cleanup Artifact
+        # language=PowerShell
+        run: |
+          cd v8\out.gn\x64.release
+          Get-ChildItem
+          Remove-Item -Path gen -Recurse -Force
+          Remove-Item -Path obj -Recurse -Force
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.artifact }}
+          path: v8/out.gn/x64.release
+          compression-level: 9
