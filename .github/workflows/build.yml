@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
       V8_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.v8_branch || '12.4.254.21' }}
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
@@ -63,12 +63,36 @@ jobs:
           git status
           git am v8asm.patch
 
+      - name: Detect installed Windows SDK
+        shell: pwsh
+        run: |
+          $includeRoot = "C:\Program Files (x86)\Windows Kits\10\Include"
+          if (-not (Test-Path $includeRoot)) {
+            throw "Windows SDK include root not found: $includeRoot"
+          }
+
+          $sdkVersion = Get-ChildItem -Path $includeRoot -Directory |
+            Where-Object { Test-Path (Join-Path $_.FullName "um") } |
+            Sort-Object -Property Name -Descending |
+            Select-Object -First 1 -ExpandProperty Name
+
+          if (-not $sdkVersion) {
+            throw "No usable Windows SDK found under $includeRoot"
+          }
+
+          Write-Host "Using Windows SDK version: $sdkVersion"
+          "WindowsSDKVersion=$sdkVersion\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "WINDOWSSDKVERSION=$sdkVersion\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Build d8
         id: build
         shell: pwsh
         run: |
           cd v8
           $release = "out.gn\x64.release"
+          if (Test-Path $release) {
+            Remove-Item -Path $release -Recurse -Force
+          }
           New-Item -ItemType Directory -Path $release -Force
           Set-Content -Path "$release\args.gn" -Value @"
           dcheck_always_on = false
