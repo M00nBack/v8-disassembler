@@ -37,13 +37,16 @@ jobs:
          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git C:\depot_tools
          echo "C:\depot_tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Fetch V8 and checkout target version
+      - name: Fetch V8 checkout target version
         shell: pwsh
         run: |
           fetch v8
+          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
           dir v8
           cd v8
           git checkout $env:V8_BRANCH
+          git branch
+          git am v8asm.patch
           dir
           gclient sync -v
           dir
@@ -56,14 +59,6 @@ jobs:
 #          path: v8
 #          compression-level: 9
 
-      - name: Apply V8 patch
-        shell: pwsh
-        run: |
-          dir
-          dir v8
-          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
-          cd v8
-          git am v8asm.patch
 
       - name: Build d8
         id: build
