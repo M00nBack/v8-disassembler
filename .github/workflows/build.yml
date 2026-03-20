@@ -116,8 +116,24 @@ jobs:
           v8_enable_external_code_space = true
           
           treat_warnings_as_errors = false
-          cflags = [ "/D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING" ]
-          cflags_cc = [ "/D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING" ]
+          
+          extra_cflags = [
+            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
+          ]
+        
+          extra_cflags_cc = [
+            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
+            "-Wno-deprecated-declarations",
+          ]
+        
+          extra_cflags_host = [
+            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
+          ]
+        
+          extra_cflags_cc_host = [
+            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
+            "-Wno-deprecated-declarations",
+          ]
           "@
           gn gen $release
           ninja -C $release d8
