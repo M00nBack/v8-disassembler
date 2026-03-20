@@ -122,7 +122,6 @@ jobs:
           ]
         
           extra_cflags_cc = [
-            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
             "-Wno-deprecated-declarations",
           ]
         
@@ -131,7 +130,6 @@ jobs:
           ]
         
           extra_cflags_cc_host = [
-            "-D_SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING",
             "-Wno-deprecated-declarations",
           ]
           "@
