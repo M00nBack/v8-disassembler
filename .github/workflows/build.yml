@@ -57,10 +57,9 @@ jobs:
         shell: pwsh
         run: |
           dir
-          Copy-Item -Path "patch\v8asm.patch" -Destination "v8\v8asm.patch"
+          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
           cd v8
-          git apply --check -v v8asm.patch
-          git apply --whitespace=fix v8asm.patch
+          git am v8asm.patch
 
       - name: Build d8
         id: build
