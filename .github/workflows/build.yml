@@ -28,9 +28,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Windows 11 SDK (10.0.22621.0)
-        shell: pwsh
-        run: |
-          & "${{ github.workspace }}\scripts\install-winsdk.ps1"
+        run: choco install windows-sdk-11-version-22H2-all -y
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
