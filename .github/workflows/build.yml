@@ -116,8 +116,8 @@ jobs:
           
           treat_warnings_as_errors = false
           "@
-          $env:INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um"
-          $env:LIB="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22621.0\um\x64"
+          $env:INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um"
+          $env:LIB="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\um\x64"
           gn gen $release
           ninja -C $release d8
 
