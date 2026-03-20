@@ -67,22 +67,23 @@ jobs:
         shell: pwsh
         run: |
           $includeRoot = "C:\Program Files (x86)\Windows Kits\10\Include"
-          if (-not (Test-Path $includeRoot)) {
-            throw "Windows SDK include root not found: $includeRoot"
-          }
-
+          Get-ChildItem -Path $includeRoot -Directory | Select-Object -ExpandProperty Name
+          Get-ChildItem -Path $includeRoot -Directory | ForEach-Object {
+            $ver = $_.Name
+            $umPath = Join-Path $_.FullName "um"
+            [PSCustomObject]@{
+              Version = $ver
+              UmExists = Test-Path $umPath
+              UmPath = $umPath
+            }
+          } | Format-Table -AutoSize
           $sdkVersion = Get-ChildItem -Path $includeRoot -Directory |
             Where-Object { Test-Path (Join-Path $_.FullName "um") } |
-            Sort-Object -Property Name -Descending |
+            Sort-Object Name -Descending |
             Select-Object -First 1 -ExpandProperty Name
-
-          if (-not $sdkVersion) {
-            throw "No usable Windows SDK found under $includeRoot"
-          }
-
-          Write-Host "Using Windows SDK version: $sdkVersion"
-          "WindowsSDKVersion=$sdkVersion\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "WINDOWSSDKVERSION=$sdkVersion\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        
+          "Selected SDK: $sdkVersion"
+          "UM path: $(Join-Path $includeRoot "$sdkVersion\um")"
 
       - name: Build d8
         id: build
