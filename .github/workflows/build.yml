@@ -57,8 +57,12 @@ jobs:
         shell: pwsh
         run: |
           dir
+          dir v8
           Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
           cd v8
+          git init
+          git add src BUILD.gn
+          git commit -m init
           git am v8asm.patch
 
       - name: Build d8
