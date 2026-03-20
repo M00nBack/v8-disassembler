@@ -31,6 +31,29 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
+
+      - name: Detect installed Windows SDK
+        shell: pwsh
+        run: |
+          $includeRoot = "C:\Program Files (x86)\Windows Kits\10\Include"
+          Get-ChildItem -Path $includeRoot -Directory | Select-Object -ExpandProperty Name
+          Get-ChildItem -Path $includeRoot -Directory | ForEach-Object {
+            $ver = $_.Name
+            $umPath = Join-Path $_.FullName "um"
+            [PSCustomObject]@{
+              Version = $ver
+              UmExists = Test-Path $umPath
+              UmPath = $umPath
+            }
+          } | Format-Table -AutoSize
+          $sdkVersion = Get-ChildItem -Path $includeRoot -Directory |
+            Where-Object { Test-Path (Join-Path $_.FullName "um") } |
+            Sort-Object Name -Descending |
+            Select-Object -First 1 -ExpandProperty Name
+
+          "Selected SDK: $sdkVersion"
+          "UM path: $(Join-Path $includeRoot "$sdkVersion\um")"
+
       - name: Install depot_tools
         shell: pwsh
         run: |
@@ -63,27 +86,6 @@ jobs:
           git status
           git am v8asm.patch
 
-      - name: Detect installed Windows SDK
-        shell: pwsh
-        run: |
-          $includeRoot = "C:\Program Files (x86)\Windows Kits\10\Include"
-          Get-ChildItem -Path $includeRoot -Directory | Select-Object -ExpandProperty Name
-          Get-ChildItem -Path $includeRoot -Directory | ForEach-Object {
-            $ver = $_.Name
-            $umPath = Join-Path $_.FullName "um"
-            [PSCustomObject]@{
-              Version = $ver
-              UmExists = Test-Path $umPath
-              UmPath = $umPath
-            }
-          } | Format-Table -AutoSize
-          $sdkVersion = Get-ChildItem -Path $includeRoot -Directory |
-            Where-Object { Test-Path (Join-Path $_.FullName "um") } |
-            Sort-Object Name -Descending |
-            Select-Object -First 1 -ExpandProperty Name
-        
-          "Selected SDK: $sdkVersion"
-          "UM path: $(Join-Path $includeRoot "$sdkVersion\um")"
 
       - name: Build d8
         id: build
