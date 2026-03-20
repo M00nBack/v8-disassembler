@@ -58,6 +58,8 @@ jobs:
         run: |
           Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\v8asm.patch"
           cd v8
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
           git status
           git am v8asm.patch
 
