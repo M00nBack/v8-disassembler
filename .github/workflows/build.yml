@@ -112,6 +112,7 @@ jobs:
           v8_enable_external_code_space = true
           
           treat_warnings_as_errors = false
+          win_sdk_version= "10.0.26100.0"
           "@
           gn gen $release
           ninja -C $release d8
