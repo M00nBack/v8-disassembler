@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     env:
       V8_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.v8_branch || '12.4.254.21' }}
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
@@ -30,11 +30,6 @@ jobs:
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install Windows 10 SDK 10.0.22621.0
-        shell: powershell
-        run: |
-          choco install windows-sdk-10-version-22621 -y
 
       - name: Detect installed Windows SDK
         shell: pwsh
