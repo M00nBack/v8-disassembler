@@ -124,7 +124,7 @@ jobs:
           v8_enable_v8_checks = false
           v8_enable_zone_compression = false
           v8_use_perfetto = false
-          v8_enable_external_code_space = false
+          v8_enable_external_code_space = true
 
           
           treat_warnings_as_errors = false
