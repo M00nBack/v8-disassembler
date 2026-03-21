@@ -192,8 +192,7 @@ jobs:
           v8_enable_pointer_compression = true
           v8_enable_pointer_compression_shared_cage = false
           v8_enable_external_code_space = false
-          v8_enable_webassembly = true
-          v8_enable_inspector = true
+
           
           treat_warnings_as_errors = false
           "@
@@ -216,5 +215,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build.outputs.artifact }}
-          path: v8/out.gn/x64.release
+          path: v8/out.gn/x64.release/d8.exe
           compression-level: 9
