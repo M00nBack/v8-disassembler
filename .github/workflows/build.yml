@@ -154,5 +154,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build.outputs.artifact }}
-          path: v8/out.gn/x64.release/
+          path: v8/out.gn/x64.release/d8.exe
           compression-level: 9
