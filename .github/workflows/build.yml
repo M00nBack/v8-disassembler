@@ -80,14 +80,12 @@ jobs:
       - name: Apply V8 patch
         shell: pwsh
         run: |
-          Copy-Item -Path "patch\0001-v8-asm-changes.patch" -Destination "v8\0001-v8-asm-changes.patch"
-          Copy-Item -Path "patch\0002-update2.patch" -Destination "v8\0002-update2.patch"
+          Copy-Item -Path "patch\0001-update.patch" -Destination "v8\0001-update.patch"
           cd v8
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           git status
-          git am 0001-v8-asm-changes.patch
-          git am 0002-update2.patch
+          git am 0001-update.patch
 
       - name: Build d8
         id: build
