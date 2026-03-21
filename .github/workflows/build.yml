@@ -137,6 +137,38 @@ jobs:
 #
 #          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
 #          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
+#      - name: Build D8
+#        id: build
+#        shell: pwsh
+#        run: |
+#          cd v8
+#          $release = "out.gn\x64.release"
+#          New-Item -ItemType Directory -Path $release -Force
+#          Set-Content -Path "$release\args.gn" -Value @"
+#          dcheck_always_on = false
+#          is_component_build = false
+#          is_debug = false
+#          target_cpu = "x64"
+#          use_custom_libcxx = false
+#          v8_monolithic = true
+#          v8_use_external_startup_data = false
+#
+#          v8_static_library = true
+#          v8_enable_disassembler = true
+#          v8_enable_object_print = true
+#          v8_enable_sandbox = true
+#          v8_enable_pointer_compression = true
+#          v8_enable_pointer_compression_shared_cage = true
+#          v8_enable_external_code_space = true
+#
+#          treat_warnings_as_errors = false
+#          "@
+#          gn gen $release
+#          ninja -C $release d8
+#
+#          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
+#          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
+#
       - name: Build D8
         id: build
         shell: pwsh
@@ -157,8 +189,8 @@ jobs:
           v8_enable_disassembler = true
           v8_enable_object_print = true
           v8_enable_sandbox = true
-          v8_enable_pointer_compression = true
-          v8_enable_pointer_compression_shared_cage = true
+          v8_enable_pointer_compression = false
+          v8_enable_pointer_compression_shared_cage = false
           v8_enable_external_code_space = true
           
           treat_warnings_as_errors = false
@@ -168,6 +200,7 @@ jobs:
 
           $artifact = "d8-with-disassembler-$env:V8_BRANCH"
           Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
+
 
       - name: Cleanup Artifact
         # language=PowerShell
