@@ -87,22 +87,6 @@ jobs:
           git status
           git am 0001-update.patch
 
-      - name: Build d8
-        id: build
-        shell: pwsh
-        run: |
-          cd v8
-          $release = "out.gn\x64.release"
-          if (Test-Path $release) {
-            Remove-Item -Path $release -Recurse -Force
-          }
-          New-Item -ItemType Directory -Path $release -Force
-          gn gen $release --args='is_debug=false v8_enable_disassembler=true v8_enable_object_print=true v8_enable_handle_zapping=false v8_enable_pointer_compression=false v8_enable_31bit_smis_on_64bit_arch=false v8_enable_hugepage=false v8_enable_fast_mksnapshot=false v8_win64_unwinding_info=true v8_enable_map_packing=false v8_enable_pointer_compression_shared_cage=false v8_enable_external_code_space=false v8_enable_sandbox=false v8_enable_v8_checks=false v8_enable_zone_compression=false v8_use_perfetto=false is_cfi=false'
-          ninja -C $release d8
-
-          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
-
 #      - name: Build d8
 #        id: build
 #        shell: pwsh
@@ -113,30 +97,46 @@ jobs:
 #            Remove-Item -Path $release -Recurse -Force
 #          }
 #          New-Item -ItemType Directory -Path $release -Force
-#          Set-Content -Path "$release\args.gn" -Value @"
-#          is_debug=false
-#          v8_enable_disassembler=true
-#          v8_enable_object_print=true
-#          v8_enable_handle_zapping=false
-#          v8_enable_pointer_compression=false
-#          v8_enable_31bit_smis_on_64bit_arch=false
-#          v8_enable_hugepage=false
-#          v8_enable_fast_mksnapshot=false
-#          v8_win64_unwinding_info=true
-#          v8_enable_map_packing=false
-#          v8_enable_pointer_compression_shared_cage=false
-#          v8_enable_external_code_space=false
-#          v8_enable_sandbox=false
-#          v8_enable_v8_checks=false
-#          v8_enable_zone_compression=false
-#          v8_use_perfetto=false
-#          is_cfi=false
-#          "@
-#          gn gen $release
+#          gn gen $release --args='is_debug=false v8_enable_disassembler=true v8_enable_object_print=true v8_enable_handle_zapping=false v8_enable_pointer_compression=false v8_enable_31bit_smis_on_64bit_arch=false v8_enable_hugepage=false v8_enable_fast_mksnapshot=false v8_win64_unwinding_info=true v8_enable_map_packing=false v8_enable_pointer_compression_shared_cage=false v8_enable_external_code_space=false v8_enable_sandbox=false v8_enable_v8_checks=false v8_enable_zone_compression=false v8_use_perfetto=false is_cfi=false'
 #          ninja -C $release d8
 #
 #          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
 #          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
+
+      - name: Build d8
+        id: build
+        shell: pwsh
+        run: |
+          cd v8
+          $release = "out.gn\x64.release"
+          if (Test-Path $release) {
+            Remove-Item -Path $release -Recurse -Force
+          }
+          New-Item -ItemType Directory -Path $release -Force
+          Set-Content -Path "$release\args.gn" -Value @"
+          is_debug=false
+          v8_enable_disassembler=true
+          v8_enable_object_print=true
+          v8_enable_handle_zapping=false
+          v8_enable_pointer_compression=false
+          v8_enable_31bit_smis_on_64bit_arch=false
+          v8_enable_hugepage=false
+          v8_enable_fast_mksnapshot=false
+          v8_win64_unwinding_info=true
+          v8_enable_map_packing=false
+          v8_enable_pointer_compression_shared_cage=false
+          v8_enable_external_code_space=false
+          v8_enable_sandbox=false
+          v8_enable_v8_checks=false
+          v8_enable_zone_compression=false
+          v8_use_perfetto=false
+          is_cfi=false
+          "@
+          gn gen $release
+          ninja -C $release d8
+
+          $artifact = "d8-with-disassembler-$env:V8_BRANCH"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "artifact=$artifact"
 
       - name: Cleanup Artifact
         # language=PowerShell
