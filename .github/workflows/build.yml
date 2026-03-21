@@ -124,6 +124,12 @@ jobs:
           v8_enable_zone_compression = false
           v8_use_perfetto = false
           v8_enable_external_code_space = false
+          
+          v8_enable_i18n_support = true
+          v8_enable_lite_mode = false
+          v8_optimized_debug = true
+          v8_promise_internal_field_count = true
+          v8_use_siphash = true
 
           
           treat_warnings_as_errors = false
