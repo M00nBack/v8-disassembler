@@ -129,7 +129,7 @@ jobs:
           v8_enable_i18n_support = true
           v8_enable_lite_mode = false
           v8_optimized_debug = true
-          v8_promise_internal_field_count = true
+          v8_promise_internal_field_count = 1
           v8_use_siphash = true
 
           
