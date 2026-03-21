@@ -102,7 +102,7 @@ jobs:
           target_cpu = "x64"
           use_custom_libcxx = false
           v8_monolithic = true
-          v8_use_external_startup_data = false
+          v8_use_external_startup_data = true
           
           v8_static_library = true
           v8_enable_disassembler = true
@@ -137,5 +137,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build.outputs.artifact }}
-          path: v8/out.gn/x64.release/d8.exe
+          path: v8/out.gn/x64.release/
           compression-level: 9
