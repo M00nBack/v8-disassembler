@@ -77,10 +77,9 @@ jobs:
       - name: Apply V8 patch
         shell: pwsh
         run: |
-          Copy-Item -Path "patch\0001-update.patch" -Destination "node\deps\v8\0001-update.patch"
+          Copy-Item -Path "patch\*" -Destination "node\deps\v8\" -Recurse -Force
           cd node\deps\v8
-          git apply --check 0001-update.patch
-          git apply --directory=deps/v8 0001-update.patch
+          python apply_patch.py --patch patch_old_v3.diff --verbose --second-try-ignore-whitespace --report apply_patch_report.txt"
 
       - name: Build D8
         id: build
