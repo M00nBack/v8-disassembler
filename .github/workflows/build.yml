@@ -68,12 +68,6 @@ jobs:
           cd node
           git checkout v22.14.0
 
-      - name: Prepare build deps (IMPORTANT)
-        shell: pwsh
-        run: |
-          cd node
-          vcbuild.bat noprojgen
-
       - name: Apply V8 patch
         shell: pwsh
         run: |
