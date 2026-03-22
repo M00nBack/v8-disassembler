@@ -128,7 +128,8 @@ jobs:
           v8_trace_maps = false
           v8_enable_extensible_ro_snapshot = false
           v8_promise_internal_field_count = 1
-          v8_enable_inspector = 0
+          v8_enable_inspector = false
+          enable_lto = true
           
           treat_warnings_as_errors = false
           "@
