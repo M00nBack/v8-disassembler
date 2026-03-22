@@ -108,6 +108,7 @@ jobs:
           v8_enable_maglev = false
           v8_enable_gdbjit = false
           v8_enable_javascript_promise_hooks = true
+          v8_enable_short_builtin_calls = true
           
           v8_enable_handle_zapping = false
           v8_enable_31bit_smis_on_64bit_arch = false
