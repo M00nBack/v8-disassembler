@@ -120,6 +120,12 @@ jobs:
           v8_optimized_debug = true
           v8_use_siphash = true
           
+          v8_enable_gdbjit = false
+          v8_enable_javascript_promise_hooks = true
+          v8_enable_short_builtin_calls = true
+          v8_enable_wasm_simd256_revec = true
+          v8_random_seed = true
+          v8_trace_maps = false
           v8_enable_extensible_ro_snapshot = false
           
           treat_warnings_as_errors = false
