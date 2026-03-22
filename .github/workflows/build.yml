@@ -96,6 +96,8 @@ jobs:
           $release = "out.gn\x64.release"
           New-Item -ItemType Directory -Path $release -Force
           Set-Content -Path "$release\args.gn" -Value @"
+          dcheck_always_on = false
+          is_component_build = false
           is_debug = false
           is_cfi = false
         
