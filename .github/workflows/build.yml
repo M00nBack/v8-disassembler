@@ -105,7 +105,15 @@ jobs:
           v8_enable_shared_ro_heap = true
           v8_enable_webassembly = true
           v8_enable_inspector  = false
-
+          v8_enable_maglev = false
+          v8_enable_extensible_ro_snapshot = false
+          v8_enable_gdbjit = false
+          v8_enable_javascript_promise_hooks = true
+          v8_enable_short_builtin_calls = true
+          v8_enable_wasm_simd256_revec = true
+          v8_promise_internal_field_count = 1
+          v8_random_seed = false
+          v8_trace_maps = false
           
           v8_enable_handle_zapping = false
           v8_enable_31bit_smis_on_64bit_arch = false
