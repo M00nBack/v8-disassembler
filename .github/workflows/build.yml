@@ -61,44 +61,77 @@ jobs:
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git C:\depot_tools
           echo "C:\depot_tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Checkout Node
+      - name: Extract V8 from Node
         shell: pwsh
         run: |
           git clone https://github.com/nodejs/node
           cd node
           git checkout v22.14.0
+          Copy-Item -Path "deps\v8" -Destination "..\v8" -Recurse -Force
+          
+          cd ../v8
+          git init
+          git add .
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+          git commit -m "init v8 from node v22.14.0"
 
       - name: Apply V8 patch
         shell: pwsh
         run: |
-          Copy-Item -Path "patch\*" -Destination "node\deps\v8\" -Recurse -Force
-          cd node\deps\v8
+          Copy-Item -Path "patch\*" -Destination "v8\" -Recurse -Force
+          cd v8
           python apply_patch.py --patch patch_old_v3.diff --verbose --second-try-ignore-whitespace --report apply_patch_report.txt"
 
       - name: Build D8
         id: build
         shell: pwsh
         run: |
-          cd node\deps\v8
+          cd v8
       
           $release = "out.gn\x64.release"
           New-Item -ItemType Directory -Path $release -Force
       
           Set-Content -Path "$release\args.gn" -Value @"
           is_debug = false
-          is_component_build = false
-          target_cpu = "x64"
-      
+          is_cfi = false
+        
           v8_enable_disassembler = true
           v8_enable_object_print = true
-      
           v8_enable_sandbox = false
           v8_enable_pointer_compression = false
-      
-          dcheck_always_on = true
+          v8_enable_pointer_compression_shared_cage = false
+          v8_enable_shared_ro_heap = true
+          v8_enable_webassembly = true
+          v8_enable_inspector  = true
+          
+          v8_enable_handle_zapping = false
+          v8_enable_31bit_smis_on_64bit_arch = false
+          v8_enable_hugepage = false
+          v8_enable_fast_mksnapshot = false
+          v8_win64_unwinding_info = true
+          v8_enable_map_packing = false
+          v8_enable_v8_checks = false
+          v8_enable_zone_compression = false
+          v8_use_perfetto = false
+          v8_enable_external_code_space = false
+          
+          v8_enable_i18n_support = true
+          v8_enable_lite_mode = false
+          v8_optimized_debug = true
+          v8_use_siphash = true
+          v8_enable_gdbjit = false
+          v8_enable_extensible_ro_snapshot = false
+          v8_enable_javascript_promise_hooks = true
+          v8_enable_maglev = false
+          v8_enable_short_builtin_calls = true
+          v8_enable_wasm_simd256_revec = true
+          v8_promise_internal_field_count = 1
+          v8_random_seed = false
+          v8_trace_maps = false
+          
           treat_warnings_as_errors = false
           "@
-      
           gn gen $release
           ninja -C $release d8
       
@@ -109,4 +142,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build.outputs.artifact }}
-          path: node/deps/v8/out.gn/x64.release/
+          path: v8/out.gn/x64.release/
