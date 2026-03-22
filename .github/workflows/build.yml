@@ -120,7 +120,7 @@ jobs:
           v8_optimized_debug = true
           v8_use_siphash = true
           
-          v8_enable_javascript_promise_hooks = true
+          v8_enable_short_builtin_calls = true
           
           treat_warnings_as_errors = false
           "@
