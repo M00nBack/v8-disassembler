@@ -121,13 +121,6 @@ jobs:
           v8_use_siphash = true
           
           v8_enable_inspector = false
-          v8_enable_maglev = false
-          v8_enable_gdbjit = false
-          v8_enable_javascript_promise_hooks = true
-          v8_enable_short_builtin_calls = true
-          v8_enable_wasm_simd256_revec = true
-          v8_random_seed = true
-          v8_trace_maps = false
           
           treat_warnings_as_errors = false
           "@
