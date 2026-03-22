@@ -67,7 +67,7 @@ jobs:
         run: |
           fetch v8
           cd v8
-          git checkout $env:V8_BRANCH
+          git checkout 10.2.154.26
           gclient sync -v
 
 
@@ -129,7 +129,6 @@ jobs:
           v8_enable_extensible_ro_snapshot = false
           v8_promise_internal_field_count = 1
           v8_enable_inspector = false
-          enable_lto = true
           
           treat_warnings_as_errors = false
           "@
