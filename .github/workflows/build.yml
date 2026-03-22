@@ -120,7 +120,7 @@ jobs:
           v8_optimized_debug = true
           v8_use_siphash = true
           
-          v8_enable_short_builtin_calls = true
+          v8_enable_wasm_simd256_revec = true
           
           treat_warnings_as_errors = false
           "@
