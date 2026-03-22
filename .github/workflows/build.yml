@@ -75,6 +75,7 @@ jobs:
           git config user.email "you@example.com"
           git config user.name "Your Name"
           git commit -m "init v8 from node v22.14.0"
+          gclient sync -v
 
       - name: Apply V8 patch
         shell: pwsh
