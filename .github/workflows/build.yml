@@ -120,7 +120,7 @@ jobs:
           v8_optimized_debug = true
           v8_use_siphash = true
           
-          v8_enable_maglev = false
+          v8_enable_gdbjit = false
           
           treat_warnings_as_errors = false
           "@
